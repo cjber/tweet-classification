@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "flood_prediction"
+version = "0.1.0"
+description = ""
+authors = ["cjber <cjberragan@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+torch = "^1.10.0"
+pytorch-lightning = "^1.5.0"
+transformers = "^4.12.3"
+jsonlines = "^2.0.0"
+doccano = "^1.5.0"
+geopandas = "^0.10.2"
+Rtree = "^0.9.7"
+transformers-interpret = "^0.5.2"
+ekphrasis = "^0.5.1"
+imgkit = "^1.2.2"
+data-science-types = "^0.2.23"
+pytest = "^6.2.5"
+pdoc3 = "^0.10.0"
+flake8 = "^4.0.1"
+black = "^21.10b0"
+ipdb = "^0.13.9"
+isort = "^5.10.0"
+sourcery-cli = "^0.9.5"
+searchtweets-v2 = "^1.1.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
