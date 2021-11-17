@@ -4,7 +4,7 @@ RUN pacman -Syu python-pip pyenv --noconfirm \
     && pip install poetry
 
 WORKDIR /flood
-COPY pyproject.toml .python-version ./
+COPY pyproject.toml .python-version src ./
 
 RUN yes | pyenv install $(cat .python-version) \
     && poetry install

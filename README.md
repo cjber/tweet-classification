@@ -8,6 +8,13 @@
 
 </div>
 
+[Cillian Berragan](https://www.liverpool.ac.uk/geographic-data-science/our-people/) [[`@cjberragan`](http://twitter.com/cjberragan)]<sup>1*</sup>
+[Alessia Calafiore](https://www.liverpool.ac.uk/geographic-data-science/our-people/) [[`@alel_domi`](http://twitter.com/alel_domi)]<sup>1</sup>
+
+<sup>1</sup> *Geographic Data Science Lab, University of Liverpool, Liverpool, United Kingdom*
+
+<sup>*</sup> *Correspondence*: C.Berragan@liverpool.ac.uk
+
 ## Abstract
 
 Social media presents a rich source of real-time information provided by
@@ -48,7 +55,7 @@ src
 │   └── classifier_model.py  # flood classification model
 │
 ├── run.py  # train model
-├── inf.py  # use model checkpoint for inference and compare with keywords
+└── inf.py  # use model checkpoint for inference and compare with keywords
 ```
 
 ## How to run
