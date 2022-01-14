@@ -27,18 +27,9 @@ class FloodModel(pl.LightningModule):
         self.train_f1 = F1(num_classes=2)
         self.valid_f1 = F1(num_classes=2)
 
-    def forward(self, input_ids, attention_mask, labels=None) -> dict:
-        """
-        Method for the forward pass.
-        'training_step', 'validation_step' and 'test_step' should call
-        this method in order to compute the output predictions and the loss.
-        Returns:
-            output_dict: forward output containing the predictions (output logits loss)
-        """
+    def forward(self, input_ids, attention_mask, text, labels=None) -> dict:
         return self.model(
-            input_ids=input_ids,
-            attention_mask=attention_mask,
-            labels=labels,
+            input_ids=input_ids, attention_mask=attention_mask, labels=labels
         )
 
     def step(self, batch: Any) -> dict:

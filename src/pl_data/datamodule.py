@@ -1,12 +1,10 @@
-from pathlib import Path
-from typing import Optional
-
 import pytorch_lightning as pl
 import torch
+from pathlib import Path
+from src.pl_data.csv_dataset import CSVDataset
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import random_split
-
-from src.pl_data.csv_dataset import CSVDataset
+from typing import Optional
 
 
 class DataModule(pl.LightningDataModule):
@@ -26,11 +24,15 @@ class DataModule(pl.LightningDataModule):
         if stage == "fit" or stage is None:
             csv_data = CSVDataset(self.data_dir)
             data_len = len(csv_data)
-            val_len = data_len // 10
+            val_len = data_len // 5
             self.train_dataset, self.val_dataset = random_split(
                 csv_data,
                 [data_len - val_len, val_len],
                 generator=torch.Generator().manual_seed(42),
+            )
+            # for validation against rule-based
+            self.val_dataset.dataset.data.iloc[self.val_dataset.indices].to_csv(
+                "data/train/val_data.csv", index=False
             )
 
     def train_dataloader(self) -> DataLoader:

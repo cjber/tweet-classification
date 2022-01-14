@@ -6,14 +6,8 @@ from transformers import AutoTokenizer
 
 
 class CSVDataset(Dataset):
-    def __init__(
-        self,
-        path: Path,
-        tokenizer=AutoTokenizer,
-        meta: bool = True,
-    ):
+    def __init__(self, path: Path, tokenizer=AutoTokenizer):
         self.data = pd.read_csv(path)
-        self.meta = meta
 
         self.tokenizer = tokenizer.from_pretrained(
             Const.MODEL_NAME, add_prefix_space=True
@@ -39,17 +33,9 @@ class CSVDataset(Dataset):
             truncation=True,
             return_tensors="pt",
         )
-
-        item = {
+        return {
             "input_ids": encoding["input_ids"].flatten(),
             "attention_mask": encoding["attention_mask"].flatten(),
             "labels": label,
             "text": text,
         }
-
-        if self.meta:
-            item["meta"] = {
-                "diff_date": idx["diff_date"] if "diff_date" in idx else None,
-                "idx": idx["idx"] if "idx" in idx else None,
-            }
-        return item
