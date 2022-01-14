@@ -8,25 +8,29 @@
 
 </div>
 
-[Cillian Berragan](https://www.liverpool.ac.uk/geographic-data-science/our-people/) [[`@cjberragan`](http://twitter.com/cjberragan)]<sup>1*</sup>
-[Alessia Calafiore](https://www.liverpool.ac.uk/geographic-data-science/our-people/) [[`@alel_domi`](http://twitter.com/alel_domi)]<sup>1</sup>
+[Cillian
+Berragan](https://www.liverpool.ac.uk/geographic-data-science/our-people/)
+\[[`@cjberragan`](http://twitter.com/cjberragan)\]<sup>1\*</sup>
+[Alessia
+Calafiore](https://www.liverpool.ac.uk/geographic-data-science/our-people/)
+\[[`@alel_domi`](http://twitter.com/alel_domi)\]<sup>1</sup>
 
-<sup>1</sup> *Geographic Data Science Lab, University of Liverpool, Liverpool, United Kingdom*
+<sup>1</sup> *Geographic Data Science Lab, University of Liverpool,
+Liverpool, United Kingdom*
 
-<sup>*</sup> *Correspondence*: C.Berragan@liverpool.ac.uk
+<sup>*</sup> *Correspondence\*: C.Berragan@liverpool.ac.uk
 
 ## Abstract
 
 Social media presents a rich source of real-time information provided by
 individual users in emergency situations. However, due to its
 unstructured nature and high volume, it is challenging to extract key
-information from these continuous data streams. This paper considers the
-ability to identify relevant flood related Tweets from a Twitter corpus
-from past flood events, demonstrating the ability to capture this
-information from a real-time Twitter stream, when initial flood warnings
-are known. Tweets considered to contain flood related information are
-identified using a deep neural classification model, and evaluated
-against a more commonly employed rule-based classification.
+information from these continuous data streams. This paper compares the
+ability to identify relevant flood related Tweets between a deep neural
+classiciation model and a simple rule-based classification. Results show
+that the classification model out-performs the rule-based approach,
+particularly in avoiding false-negatives, at the time-cost of labelling
+and training the model.
 
 ## Description
 
@@ -60,7 +64,7 @@ src
 
 ## How to run
 
-> Note: At present the Tweet corpus is not available for model training
+> Tweet corpus is not available for model training due to Twitter terms. To train using your own data place a csv into `data/train/labelled.csv` with `data` and `label` columns
 
 ### Poetry
 
