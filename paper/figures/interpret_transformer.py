@@ -5,7 +5,7 @@ from transformers import AutoTokenizer
 from transformers_interpret import SequenceClassificationExplainer
 
 from src.common.utils import Const
-from src.pl_modules.classifier_model import FloodModel
+from src.pl_module.classifier_model import FloodModel
 
 test_results: pd.DataFrame = pd.read_csv("data/out/test_results.csv")
 full_labelled = pd.read_csv("data/out/full_labelled.csv")
@@ -35,7 +35,7 @@ rule_true_neg = test_results[
 ]
 
 model = FloodModel.load_from_checkpoint(
-    "default/0/checkpoints/epoch=1-step=213.ckpt"
+    "ckpts/default/0/checkpoints/checkpoint.ckpt"
 ).to("cuda")
 tokenizer = AutoTokenizer.from_pretrained(Const.MODEL_NAME)
 

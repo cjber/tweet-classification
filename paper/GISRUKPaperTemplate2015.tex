@@ -1,0 +1,69 @@
+\documentclass[11pt]{article}
+\usepackage[left=25mm, right=25mm, top=25mm, bottom=25mm, includehead=true, includefoot=true]{geometry}
+
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{natbib} % For referencing
+\usepackage{authblk} % For author lists
+\usepackage[parfill]{parskip} % Line between paragraphs
+
+\pagenumbering{gobble} % Turn off page numbers
+
+% Make all headings the same size (11pt):
+\usepackage{sectsty}
+\sectionfont{\normalsize}
+\subsectionfont{\normalsize}
+\subsubsectionfont{\normalsize}
+\paragraphfont{\normalsize}
+
+\newenvironment{CSLReferences}%
+  {}%
+  {\par}
+
+
+\renewcommand{\abstractname}{Summary} % Make 'abstract' be called 'Summary'
+
+
+
+% This makes links and bookmarks in the pdf output (should be last usepackage command because it overrides lots of other commands)
+\usepackage[pdftex]{hyperref} 
+\hypersetup{pdfborder={0 0 0} } % This turns off the stupid colourful border around links
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+% **************  TITLE AND AUTHOR INFORMATION **************
+
+\title{$title$}
+
+\author[1]{Cillian Berragan\thanks{C.Berragan@liverpool.ac.uk}}
+\author[1]{Alessia Calafiore\thanks{A.Calafiore@liverpool.ac.uk}}
+\affil[1]{$institute$}
+
+\renewcommand\Authands{ and } % correct last comma in author list
+
+\begin{document}
+
+\maketitle
+
+% **************  ABSTRACT/SUMMARY  **************
+
+\begin{abstract}
+\centering
+
+$abstract$
+
+\end{abstract}
+
+% **************  MAIN BODY OF THE PAPER **************
+
+$body$
+
+% **************  REFERENCES **************
+
+\bibliographystyle{apalike}
+\bibliography{$bibliography$}
+
+\end{document}

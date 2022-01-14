@@ -1,0 +1,134 @@
+---
+title: Comparing rule-based methods and pre-trained language models to classify flood related Tweets
+institute: University of Liverpool, Liverpool, L69 3BX
+abstract: |
+    Social media presents a rich source of real-time information provided by individual users in emergency situations. However, due to its unstructured nature and high volume, it is challenging to extract key information from these continuous data streams. This paper compares the ability to identify relevant flood related Tweets between a deep neural classiciation model and a simple rule-based classification. Results show that the classification model out-performs the rule-based approach, particularly in avoiding false-negatives, at the time-cost of labelling and training the model.
+bibliography: references.bib
+output:
+    pdf_document:
+        template: GISRUKPaperTemplate2015.tex
+documentclass: llncs
+
+---
+
+```{r readLines("./scripts/defaults.R"), echo=FALSE}
+cjrmd::default_latex_chunk_opts(cache = FALSE)
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+```
+
+# Introduction
+
+Twitter presents large continuous feed of information regarding emergency events, contributed through individual users, as these events occur. Many emergency events have been studied in relation to Twitter, including hurricanes and floods in the US \citep{hughes2014,kim2018}, Paris terror attacks in 2015 \citep{reilly2021}, and UK flooding events \citep{saravanou2015,brouwer2017}.
+
+Extreme weather events have become increasingly common \citep{kron2019}, a trend that is expected to continue \citep{forzieri2017}, meaning there is an increasing demand to predict and understand how natural disasters develop. Tweets have proved useful in complementing and supporting emergency response in many cases, and often the first reports about emergencies on social media often precede those of mainstream media \citep{perng2013,martinez-rojas2018,kim2018,laylavi2016}. It is therefore important to be able to extract flood related Tweets, removing the noise that often comes with social media streams \citep{ashktorab2014}.
+
+Much of the past work that has used Twitter to study past emergency events has used keywords to identify relevant Tweets \citep{kryvasheyeu2016,brouwer2017,morstatter2013}. This however has several issues, keywords are human selected, meaning they require a pre-existing knowledge of the semantics used to describe targeted events. Certain keywords also do not always relate to these emergency events \citep{sakaki2010,spielhofer2016}, for example a person may be in _'floods of tears'_. Finally, Tweets relevant to emergency events also do not necessarily contain an obvious keyword (_'Cars are floating down the street!'_), and therefore are unable to be detected. More recent work has considered the ability to use machine learning to classify Tweets into those relevant to emergency events, and those that are irrelevant \citep{imran2020,arthur2018,sakaki2010,li2018b}. These studies have utilised a variety of methods, building from classical approaches like Naïve Bayes classification \citep{imran2013,li2018b} and Support Vector Machines (SVMs) \citep{caragea2011,sakaki2010}, while more recent work has considered the emerging prevalence of neural networks in text-based classification \citep{caragea2016,debruijn2020,nguyen2017}. Traditional machine learning methods however rely on the use of feature engineering to determine model input, are unable to preserve word order, and have limited capability to use context, often over-fitting based on features selected \citep{caragea2016}. Work with neural networks has shown that given pre-trained word embeddings, they have the capability to outperform these methods \citep{ghafarian2020,caragea2016,algiriyage2021}.
+
+This work considers the retrospective classification of a selection of Tweets from past flooding events in the United Kingdom, evaluating the effectiveness of a deep neural classification model against a keyword based approach. This work aims to demonstrate the benefits and costs of the use of new sophisticated methods in natural language processing for this task. 
+
+Further work is expected to build on this, allowing for information extraction from the relevant Tweets to inform first responders, providing more fine-grained information based on the first-hand experience of individuals like specific property damage, or missing persons, allowing social media to complement existing methods used during flood events \citep{muller2015}.
+
+# Methodology
+
+```{r, results = 'hide'}
+box::use(
+    here[here],
+    readr[read_csv],
+    sf[st_read],
+    cjrmd,
+    kableExtra,
+    scales[comma],
+    cowplot[ggdraw, draw_image],
+    patchwork[...]
+)
+```
+
+## Data Collection
+
+### Flood Data
+
+```{r}
+fwp <- st_read(here("data/floods/flood_warnings.gpkg"), quiet = TRUE)
+```
+
+A historical dataset containing all _Severe Flood Warnings_, _Flood Warnings_, and _Flood Alerts_ issued by the [UK flood warning system](https://flood-warning-information.service.gov.uk/warnings) is available through the [UK Government](https://data.gov.uk/dataset/d4fb2591-f4dd-4e7f-9aaf-49af94437b36/historic-flood-warnings) under the [Open Government Licence](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). This data was linked with flood zones from the [Environment Agency Real Time Flood-Monitoring API](https://environment.data.gov.uk/flood-monitoring/doc/reference). To reduce the volume of flood events being considered, only _Severe Flood Warnings_ occurring after 2010 were selected, leaving a total of `r nrow(fwp)` individual _Severe Flood Warning_ events.
+
+### Tweets
+
+The [Twitter API v2](https://developer.twitter.com/en/docs/twitter-api/early-access) was used to extract Tweets from the full historic Tweet archive. For each flood warning the query was constructed using several requirements:
+
+* **Time-frame:** 7 days before to 7 days after flood warning
+* **Bounds:** Bounding box of the relevant flood area
+* **Parameters:** has _geography_, exclude retweets, exclude replies, exclude quotes
+
+```{r ft}
+ft <- read_csv(here("data/floods/flood_tweets.csv"))
+```
+
+Geographic information associated with every Tweet was required due to the decision to use bounding boxes to pre-emptively filter Tweets in areas not subject to flooding. The new Twitter API now uses a combination of factors to associate geographic coordinates with Tweets which overcomes the issues with limited availability of geotags found with many previous studies \citep{middleton2014,carley2016,morstatter2013}. Geography associated with a Tweet may now include either _geotags_, _user profile location_ or _locations mentioned in Tweet_. The total number of Tweets extracted was `r comma(nrow(ft))`, with an average of `r round(nrow(ft) / nrow(fwp))` Tweets per flood warning.
+
+## Classification
+
+```{r workflow, fig.cap="Overview of the model processing pipeline."}
+knitr::include_graphics("figures/workflow.pdf")
+```
+
+Figure \ref{fig:workflow} gives an overview of the classification pipeline used, each Tweet was first pre-processed to normalise usernames and web addresses, and hashtags were parsed to extract words \citep{pota2020} (Stage 1). As a preliminary experiment, instead of labelling the entire corpus, a random subset of \~2,500 Tweets were taken and manually annotated to train the classification model using [Doccano](https://github.com/doccano/doccano) \citep{nakayama2018}, with 20% used for model validation (Stage 2). The validation subset was then used to evaluate model performance in relation to the simple rule-based approach (Stage 3).
+
+The model builds on the established NLP task of sequence classification, taking token sequences ($\mathbf{x} = \{x_{0}, x_{1}\dots x_{n}\}$), and predicting a single label ($\mathit{y}$). A pre-trained transformer language model was taken as a base, using the RoBERTa architecture, pre-trained using a corpus of 58 million Tweets \citep{barbieri2020}^[Available on the [Huggingface Model Hub](https://huggingface.co/cardiffnlp/twitter-roberta-base) \citep{wolf2020}].
+
+To construct a rule-based approach for evaluation against this model, every Tweet retrieved that included a selection of 456 keywords provided by @saravanou2015 were labelled as being flood related (_FLOOD_), while all Tweets that did not contain this selection of keywords were labelled as _NOT_FLOOD_.
+
+For comparative evaluation, the F~1~ metric was used, which takes the harmonic mean of the precision and recall, meaning class imbalance is accounted for. To qualitatively assess the performance of the transformer model, _attributions_^[https://github.com/cdpierse/transformers-interpret] for each word in a few selected Tweets were visualised to identify the ability of the model to capture information relevant to flood events, without having to explicitly be fed in keywords \citep{sundararajan2017}.
+
+
+```{r}
+training <- read_csv(here("data/train/labelled.csv"))
+```
+
+# Results
+
+## Comparison of classification methods
+
+```{r}
+box::use(
+    figures / confusion
+)
+```
+
+Overall the classification model out-performed the rule-based method on the validation subset, achieving an F~1~ score of `r round(confusion$eval_table[1, 2], 3)`, compared with `r round(confusion$eval_table[2, 2], 3)` for the rule-base approach. There is both a lower recall for the rule-based model (`r round(confusion$eval_table[2, 3], 3)` compared with `r round(confusion$eval_table[1, 3], 3)`), and a lower precision (`r round(confusion$eval_table[2, 4], 3)` compared with `r round(confusion$eval_table[1, 4], 3)`).
+
+Figure \ref{fig:transformerviz} explores the decisions made by the transformer model, using four example Tweets to demonstrate the _attribution_ given to each token when assigning a label. Figure \ref{fig:transformerviz} (A) first gives an example Tweet that is correctly identified as being flood related by the transformer, but does not contain any selected flood related keywords. In this example three keywords are highlighted as important by the model for its correct classification _gravel, river_ and _wier_. This suggests that the model is able to infer from context that these words relate to flooding, rather than having to be explicitly told through feature engineering or keywords.
+
+```{r transformerviz, fig.cap="Attribution levels for selected Tweets classified by the transformer model. Attribution label indicates the human annotated label, predicted label shows assigned label with confidence values. Positive attributions dictate the importance of a feature in the given label prediction.", fig.height=6}
+tp <- ggdraw() +
+    draw_image(here("paper/figures/transformer_viz_tp.png"))
+tn <- ggdraw() +
+    draw_image(here("paper/figures/transformer_viz_tn.png"))
+rtp <- ggdraw() +
+    draw_image(here("paper/figures/transformer_viz_rtp.png"))
+rtn <- ggdraw() +
+    draw_image(here("paper/figures/transformer_viz_rtn.png"))
+
+(tp / tn / rtp / rtn) +
+    plot_annotation(
+        tag_levels = list(c(
+            "(A) True-positive",
+            "(B) True-negative",
+            "(C) False-negative",
+            "(D) False-positive"
+        ), "A")
+    )
+```
+
+On Figure \ref{fig:transformerviz} (B), an example is chosen where the model was able to correctly identify the Tweet as being unrelated to flooding, but contains the keyword _lightning_ meaning the rule-based method incorrectly identified it as flood related. Several keywords again appear important for this correct classification, _finally_ which is unlikely to appear in Tweets relevant to floods, in addition to _apples_ and _ipad pro_, both of which likely appear relatively frequently on Twitter, but rarely in flood related contexts.
+
+The final two sub-figures give examples where the model gives incorrect classifications, but the rule-based method does not. Figure \ref{fig:transformerviz} (C) shows that while the model realises that _raining_ is a word positively associated with flooding, the rest of the sentence implies that the overall Tweet is likely not in reference to a flooding event. This example reflects a potential issue with selecting a broad annotation scheme, which considered mentions of weather that may relate to flooding events to be a positive match. A Tweet like this is relatively borderline, even for human annotation, meaning it is unsurprising that the model struggles to make a correct decision. This issue is also reflected in Figure \ref{fig:transformerviz} (D), the words _tide, mark_ and _kent_ are all identified as flood related words, which is likely true and the label reflects an issue with human annotation.
+
+# Discussion
+
+While the transformer-based classification model outperforms a rule-based approach, they present different benefits and costs. Supervised classification through a neural network relies heavily on a suitable amount of high quality labelled data, which presents an initial time-cost. Keyword selection is comparatively straightforward, and does not rely on a pre-existing corpus of relevant text. The training and inference for the transformer model also costs both time and resources, while keyword selection may be applied directly during the extraction of Tweets through the Twitter API.
+
+Keywords however are inherently subjective, as demonstrated by past work which found varying selections of keywords to be appropriate the classification of flood related Tweets \citep{spielhofer2016,arthur2018,saravanou2015}. Constructing a labelled corpus a broad binary classification of Tweets to train a supervised model is less subjective, as the model itself may use the context provided through the training data to independently learn how to approach the classifications. As classification is not limited to specific keywords, relevant Tweets therefore include a broad range of flood related information that would not typically be captured (See Figure \ref{fig:transformerviz} (A)).
+
+The complexity of the transformer architecture itself also presents improvements over past machine learning methods, as word order is preserved, and the pre-trained word embeddings mean no _ad hoc_ feature engineering is required, which may have contributed to some bias and over-fitting in past work \citep{caragea2016}. The semantic context captured by the model is notable on Figure \ref{fig:transformerviz} (B), which indicates that while lightning is likely considered by the model in most contexts to be associated with floods, the model is able to consider this instance independently, understanding that in this context the word _'lightning'_ is not weather related. Further work should consider using the entire corpus of `r comma(nrow(ft))` Tweets extracted relating to UK flood events to train a more robust model.
