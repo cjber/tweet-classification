@@ -51,11 +51,11 @@ src
 │   ├── get_tweets.py  # download tweets to csv through twitter api
 │   └── utils.py  # various utility functions
 │
-├── datasets
+├── pl_data
 │   ├── csv_dataset.py  # torch dataset for flood data
 │   └── datamodule.py  # lightning datamodule
 │
-├── modules
+├── pl_module
 │   └── classifier_model.py  # flood classification model
 │
 ├── run.py  # train model
