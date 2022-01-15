@@ -18,7 +18,7 @@ Calafiore](https://www.liverpool.ac.uk/geographic-data-science/our-people/)
 <sup>1</sup> *Geographic Data Science Lab, University of Liverpool,
 Liverpool, United Kingdom*
 
-<sup>*</sup> *Correspondence\*: C.Berragan@liverpool.ac.uk
+<sup>\*</sup> *Correspondence*: C.Berragan@liverpool.ac.uk
 
 ## Abstract
 
