@@ -27,10 +27,10 @@ individual users in emergency situations. However, due to its
 unstructured nature and high volume, it is challenging to extract key
 information from these continuous data streams. This paper compares the
 ability to identify relevant flood related Tweets between a deep neural
-classiciation model and a simple rule-based classification. Results show
-that the classification model out-performs the rule-based approach,
-particularly in avoiding false-negatives, at the time-cost of labelling
-and training the model.
+classification model known as a transformer, and a simple rule-based
+classification. Results show that the classification model out-performs
+the rule-based approach, at the time-cost of labelling and training the
+model.
 
 ## Description
 
@@ -64,7 +64,9 @@ src
 
 ## How to run
 
-> Tweet corpus is not available for model training due to Twitter terms. To train using your own data place a csv into `data/train/labelled.csv` with `data` and `label` columns
+> Tweet corpus is not available for model training due to Twitter terms.
+> To train using your own data place a csv into
+> `data/train/labelled.csv` with `data` and `label` columns
 
 ### Poetry
 
