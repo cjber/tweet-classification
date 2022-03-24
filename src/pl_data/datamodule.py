@@ -1,10 +1,12 @@
+from pathlib import Path
+from typing import Optional
+
 import pytorch_lightning as pl
 import torch
-from pathlib import Path
-from src.pl_data.csv_dataset import CSVDataset
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import random_split
-from typing import Optional
+
+from src.pl_data.csv_dataset import CSVDataset
 
 
 class DataModule(pl.LightningDataModule):

@@ -1,12 +1,13 @@
 import concurrent.futures
-import geopandas as gpd
 import itertools
+import time
+from pathlib import Path
+
+import geopandas as gpd
 import jsonlines
 import pandas as pd
 import requests
-import time
 from pandas import Timedelta
-from pathlib import Path
 from searchtweets import ResultStream, gen_request_parameters, load_credentials
 from tqdm import tqdm
 

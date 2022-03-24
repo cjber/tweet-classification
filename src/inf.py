@@ -1,25 +1,12 @@
+from pathlib import Path
+
 import pandas as pd
 import torch
-from pathlib import Path
-from src.pl_data.csv_dataset import CSVDataset
-from src.pl_module.classifier_model import FloodModel
 from torch.utils.data.dataloader import DataLoader
 from tqdm import tqdm
 
-# KEYWORDS = [
-#     "flood",
-#     "floods",
-#     "flooding",
-#     "flooded",
-#     "rain",
-#     "raining",
-#     "rains",
-#     "rained",
-#     "storm",
-#     "stormy",
-#     "thunder",
-#     "lightning",
-# ]
+from src.pl_data.csv_dataset import CSVDataset
+from src.pl_module.classifier_model import FloodModel
 
 KEYWORDS = [line.strip() for line in open("data/floods/flood_lexicon.txt")]
 

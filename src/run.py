@@ -1,5 +1,6 @@
-import pytorch_lightning as pl
 from pathlib import Path
+
+import pytorch_lightning as pl
 from pytorch_lightning import Callback, seed_everything
 from pytorch_lightning.callbacks import (
     EarlyStopping,
@@ -7,6 +8,7 @@ from pytorch_lightning.callbacks import (
     ModelCheckpoint,
 )
 from pytorch_lightning.loggers import CSVLogger
+
 from src.pl_data.datamodule import DataModule
 from src.pl_module.classifier_model import FloodModel
 

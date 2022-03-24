@@ -1,11 +1,13 @@
+from typing import Any, Union
+
 import pytorch_lightning as pl
-from src.common.utils import Const
 from torch import nn
 from torch.optim import AdamW, Optimizer
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torchmetrics import F1
 from transformers import AutoModelForSequenceClassification
-from typing import Any, Union
+
+from src.common.utils import Const
 
 
 class FloodModel(pl.LightningModule):
