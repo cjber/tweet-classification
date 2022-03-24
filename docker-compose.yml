@@ -1,0 +1,7 @@
+services:
+  model:
+    build: .
+    runtime: nvidia
+    volumes:
+      - ${PWD}/ckpts:/flood/ckpts:rw
+      - ${PWD}/csv_logs:/flood/csv_logs:rw
