@@ -21,7 +21,7 @@ text_processor = TextPreProcessor(
 
 class Const:
     MAX_TOKEN_LEN: int = 128
-    MODEL_NAME: str = "distilbert-base-uncased"
+    MODEL_NAME: str = "cardiffnlp/twitter-roberta-base"
     LABELS: dict[str, int] = {
         "B-PLACE": 0,
         "I-PLACE": 1,

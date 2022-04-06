@@ -24,7 +24,7 @@ Social media presents a rich source of real-time information provided by individ
 
 ## Description
 
-This repository contains the code for building a DistilBERT-based binary text classification model, trained to identify relevant and irrelevant flood related Tweets. Model training uses a labelled corpus of Tweets extracted during past severe flood events in the United Kingdom, using flood zone bounding boxes.
+This repository contains the code for building a RoBERTa-based binary text classification model, trained to identify relevant and irrelevant flood related Tweets. Model training uses a labelled corpus of Tweets extracted during past severe flood events in the United Kingdom, using flood zone bounding boxes.
 
 Inference over a separate testing corpus is compared against a keyword based classification method.
 
@@ -53,7 +53,7 @@ src
 > To train using your own data place a csv into
 > `data/train/labelled.csv` with `data` and `label` columns.
 >
-> Docker currently uses `demo_data`
+> Docker currently uses `demo_data` to demonstrate model training
 
 ### Poetry
 
@@ -90,4 +90,3 @@ Run with GPU and mapped volumes:
 ```bash
 docker run --rm --gpus all -v ${PWD}/ckpts:/flood/ckpts -v ${PWD}/csv_logs:/flood/csv_logs cjber/flood_tweets
 ```
-
