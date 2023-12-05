@@ -37,8 +37,7 @@ def test_model(data, model, keywords):
         truth = item["labels"].numpy().item()
         rule = 1 if any(k in text.lower() for k in keywords) else 0
         results.append({"text": text, "pred": label, "truth": truth, "rule": rule})
-    results = pd.DataFrame(results)
-    return results
+    return pd.DataFrame(results)
 
 
 if __name__ == "__main__":
