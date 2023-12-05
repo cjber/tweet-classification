@@ -159,7 +159,7 @@ if __name__ == "__main__":
             writer.write(tweet)
 
     with jsonlines.open(FLOOD_DIR / "flood_tweets.jsonl", mode="r") as reader:
-        tweets = pd.DataFrame([tweet for tweet in reader])
+        tweets = pd.DataFrame(list(reader))
 
     tweets["created_at"] = pd.to_datetime(tweets["created_at"].str[:-14])
     tweets["warning_time"] = pd.to_datetime(tweets["warning_time"].str[:-9])

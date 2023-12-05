@@ -55,7 +55,7 @@ class Label:
             Name of task, either GER or REL.
         """
         self.name = name
-        assert self.name in ["GER", "REL"], "Type must be either GER or REL"
+        assert self.name in {"GER", "REL"}, "Type must be either GER or REL"
 
         if self.name == "GER":
             self.labels: dict[str, int] = {
@@ -156,7 +156,7 @@ def combine_biluo(tokens: list[str], tags: list[str]) -> tuple[list[str], list[s
         if idx + 1 < len(tags_biluo) and tag[0] == "B":
             i = 1
             while tags_biluo[idx + i][0] not in ["B", "O", "U"]:
-                tokens_biluo[idx] = tokens_biluo[idx] + " " + tokens_biluo[idx + i]
+                tokens_biluo[idx] = f"{tokens_biluo[idx]} {tokens_biluo[idx + i]}"
                 i += 1
                 if idx + i == len(tokens_biluo):
                     break
